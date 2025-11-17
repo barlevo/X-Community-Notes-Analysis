@@ -55,11 +55,11 @@ class ReportGenerator:
         json_files = list(results_dir.glob("classification_summary_*.json"))
         
         if not json_files:
-            print(f"⚠️  No classification summary found in {results_dir}")
+            print(f"WARNING: No classification summary found in {results_dir}")
             return None
         
         latest_file = max(json_files, key=lambda x: x.stat().st_mtime)
-        print(f"📂 Loading classification summary: {latest_file.name}")
+        print(f"Loading classification summary: {latest_file.name}")
         
         with open(latest_file, 'r') as f:
             return json.load(f)
@@ -300,15 +300,15 @@ KEY INSIGHTS
         with open(report_file, 'w', encoding='utf-8') as f:
             f.write(full_report)
         
-        print(f"\n✅ Report generated successfully!")
-        print(f"📄 Report saved to: {report_file}")
+        print(f"\nReport generated successfully!")
+        print(f"Report saved to: {report_file}")
         
         # Also save as markdown
         md_file = self.output_dir / f"analysis_report_{self.timestamp}.md"
         with open(md_file, 'w', encoding='utf-8') as f:
             f.write(full_report.replace('='*70, '---'))
         
-        print(f"📄 Markdown version: {md_file}")
+        print(f"Markdown version: {md_file}")
         
         return report_file
 
@@ -339,13 +339,13 @@ def main():
         report_file = generator.generate_report(results_dir=args.results_dir)
         
         print("\n" + "="*70)
-        print("✅ REPORT GENERATION COMPLETE")
+        print("REPORT GENERATION COMPLETE")
         print("="*70)
         print(f"\nReport is ready for presentation!")
         print(f"Location: {report_file}")
         
     except Exception as e:
-        print(f"\n❌ Error generating report: {e}")
+        print(f"\nERROR: Error generating report: {e}")
         import traceback
         traceback.print_exc()
         return 1

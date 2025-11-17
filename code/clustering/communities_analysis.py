@@ -62,7 +62,7 @@ class SpecializedVisualizationsDevide:
         Raises:
             FileNotFoundError: If required analysis files are not found
         """
-        print("📂 Loading devide analysis results...")
+        print("Loading devide analysis results...")
         
         try:
             self.specialization_df = pd.read_csv(self.analysis_dir / "specialization_analysis.csv")
@@ -73,11 +73,11 @@ class SpecializedVisualizationsDevide:
                 self.analysis_dir / "community_topic_proportions.csv", index_col=0
             )
             
-            print(f"✅ Loaded analysis for {len(self.specialization_df)} communities")
-            print(f"✅ Topic categories: {len(self.community_topic_proportions.columns)}")
+            print(f"Loaded analysis for {len(self.specialization_df)} communities")
+            print(f"Topic categories: {len(self.community_topic_proportions.columns)}")
             
         except FileNotFoundError as e:
-            print(f"❌ Error loading analysis results: {e}")
+            print(f"ERROR: Error loading analysis results: {e}")
             print("Please run the devide topic analysis first!")
             return False
         
@@ -93,14 +93,14 @@ class SpecializedVisualizationsDevide:
         Returns:
             Series with conflict engagement scores per community
         """
-        print("\n🔥 Creating conflict topics analysis...")
+        print("\nCreating conflict topics analysis...")
         
         # Define conflict-related topics
         conflict_topics = ['UkraineConflict', 'GazaConflict', 'SyriaWar', 'OtherConflicts', 'Iran']
         available_conflict_topics = [topic for topic in conflict_topics if topic in self.community_topic_proportions.columns]
         
         if not available_conflict_topics:
-            print("⚠️  No conflict topics found in data")
+            print("WARNING: No conflict topics found in data")
             return
         
         # Extract conflict topic data
@@ -142,7 +142,7 @@ class SpecializedVisualizationsDevide:
         plt.savefig(self.results_dir / "conflict_engagement_ranking.png", dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"🔥 Conflict analysis saved to {self.results_dir}")
+        print(f"Conflict analysis saved to {self.results_dir}")
         
         return conflict_engagement
     
@@ -154,7 +154,7 @@ class SpecializedVisualizationsDevide:
         - Diversity vs community size
         - Diversity score distribution
         """
-        print("\n🌈 Creating diversity analysis...")
+        print("\nCreating diversity analysis...")
         
         # Diversity vs Size analysis
         plt.figure(figsize=(12, 8))
@@ -198,7 +198,7 @@ class SpecializedVisualizationsDevide:
         plt.savefig(self.results_dir / "diversity_distribution.png", dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"🌈 Diversity analysis saved to {self.results_dir}")
+        print(f"Diversity analysis saved to {self.results_dir}")
     
     def create_topic_specialists_analysis(self) -> Dict[str, pd.Series]:
         """
@@ -210,7 +210,7 @@ class SpecializedVisualizationsDevide:
         Returns:
             Dictionary mapping topic names to top specialist communities
         """
-        print("\n🎯 Creating topic specialists analysis...")
+        print("\nCreating topic specialists analysis...")
         
         # For each topic, find the top specialist communities
         topic_specialists = {}
@@ -263,7 +263,7 @@ class SpecializedVisualizationsDevide:
         plt.savefig(self.results_dir / "topic_specialists_grid.png", dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"🎯 Topic specialists analysis saved to {self.results_dir}")
+        print(f"Topic specialists analysis saved to {self.results_dir}")
         
         return topic_specialists
     
@@ -274,7 +274,7 @@ class SpecializedVisualizationsDevide:
         Generates polar/radar charts showing topic profiles for the
         largest communities.
         """
-        print("\n📡 Creating radar charts for top communities...")
+        print("\nCreating radar charts for top communities...")
         
         # Select top 6 communities by size for radar analysis
         top_communities = self.specialization_df.nlargest(6, 'total_notes')
@@ -321,7 +321,7 @@ class SpecializedVisualizationsDevide:
         plt.savefig(self.results_dir / "community_radar_charts.png", dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"📡 Radar charts saved to {self.results_dir}")
+        print(f"Radar charts saved to {self.results_dir}")
     
     def create_topic_dominance_analysis(self) -> pd.DataFrame:
         """
@@ -333,7 +333,7 @@ class SpecializedVisualizationsDevide:
         Returns:
             DataFrame with dominance and competition metrics per topic
         """
-        print("\n👑 Creating topic dominance analysis...")
+        print("\nCreating topic dominance analysis...")
         
         # Calculate topic dominance metrics
         dominance_data = []
@@ -387,7 +387,7 @@ class SpecializedVisualizationsDevide:
         plt.savefig(self.results_dir / "topic_dominance_analysis.png", dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"👑 Topic dominance analysis saved to {self.results_dir}")
+        print(f"Topic dominance analysis saved to {self.results_dir}")
         
         return dominance_df
     
@@ -401,7 +401,7 @@ class SpecializedVisualizationsDevide:
         Returns:
             Tuple of (leadership_matrix_top3, leadership_matrix_top5) DataFrames
         """
-        print("\n👥 Creating topic leadership matrices...")
+        print("\nCreating topic leadership matrices...")
         
         # Create leadership matrix (like the original) - Top 3
         leadership_matrix_top3 = pd.DataFrame(index=self.community_topic_proportions.index, 
@@ -465,11 +465,11 @@ class SpecializedVisualizationsDevide:
         plt.savefig(self.results_dir / "topic_leadership_matrix_top5.png", dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"👥 Topic leadership matrices saved to {self.results_dir}")
-        print(f"   📊 topic_leadership_matrix_top3.csv - Leadership scores (top 3)")
-        print(f"   📊 topic_leadership_matrix_top5.csv - Leadership scores (top 5)")
-        print(f"   🎨 topic_leadership_matrix_top3.png - Visual matrix (top 3)")
-        print(f"   🎨 topic_leadership_matrix_top5.png - Visual matrix (top 5)")
+        print(f"Topic leadership matrices saved to {self.results_dir}")
+        print(f"   topic_leadership_matrix_top3.csv - Leadership scores (top 3)")
+        print(f"   topic_leadership_matrix_top5.csv - Leadership scores (top 5)")
+        print(f"   topic_leadership_matrix_top3.png - Visual matrix (top 3)")
+        print(f"   topic_leadership_matrix_top5.png - Visual matrix (top 5)")
         
         return leadership_matrix_top3, leadership_matrix_top5
     
@@ -480,7 +480,7 @@ class SpecializedVisualizationsDevide:
         Generates a multi-panel dashboard showing key community metrics
         including specialization, diversity, size, and topic engagement.
         """
-        print("\n📊 Creating summary dashboard...")
+        print("\nCreating summary dashboard...")
         
         fig = plt.figure(figsize=(20, 12))
         
@@ -546,7 +546,7 @@ class SpecializedVisualizationsDevide:
         plt.savefig(self.results_dir / "summary_dashboard.png", dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"📊 Summary dashboard saved to {self.results_dir}")
+        print(f"Summary dashboard saved to {self.results_dir}")
     
     def run_all_visualizations(self) -> Dict[str, Any]:
         """
@@ -564,11 +564,11 @@ class SpecializedVisualizationsDevide:
         Returns:
             Dictionary containing all analysis results
         """
-        print("🚀 CREATING SPECIALIZED VISUALIZATIONS (DEVIDE STRUCTURE)")
+        print("CREATING SPECIALIZED VISUALIZATIONS (DEVIDE STRUCTURE)")
         print("=" * 70)
         
         if not hasattr(self, 'specialization_df'):
-            print("❌ Analysis results not loaded. Please run devide topic analysis first!")
+            print("ERROR: Analysis results not loaded. Please run devide topic analysis first!")
             return
         
         # Create all visualizations
@@ -580,19 +580,19 @@ class SpecializedVisualizationsDevide:
         leadership_top3, leadership_top5 = self.create_topic_leadership_matrix()
         self.create_summary_dashboard()
         
-        print(f"\n✅ All specialized visualizations created!")
-        print(f"📁 Results saved to: {self.results_dir}")
+        print(f"\nAll specialized visualizations created!")
+        print(f"Results saved to: {self.results_dir}")
         print("\nGenerated visualizations:")
-        print("  🔥 conflict_topics_heatmap.png - Conflict topics analysis")
-        print("  🔥 conflict_engagement_ranking.png - Conflict engagement ranking")
-        print("  🌈 diversity_analysis.png - Diversity vs size analysis")
-        print("  🌈 diversity_distribution.png - Diversity score distribution")
-        print("  🎯 topic_specialists_grid.png - Topic specialists by category")
-        print("  📡 community_radar_charts.png - Community topic profiles")
-        print("  👑 topic_dominance_analysis.png - Topic dominance vs competition")
-        print("  👥 topic_leadership_matrix_top3.png - Topic leadership (top 3)")
-        print("  👥 topic_leadership_matrix_top5.png - Topic leadership (top 5)")
-        print("  📊 summary_dashboard.png - Comprehensive dashboard")
+        print("  conflict_topics_heatmap.png - Conflict topics analysis")
+        print("  conflict_engagement_ranking.png - Conflict engagement ranking")
+        print("  diversity_analysis.png - Diversity vs size analysis")
+        print("  diversity_distribution.png - Diversity score distribution")
+        print("  topic_specialists_grid.png - Topic specialists by category")
+        print("  community_radar_charts.png - Community topic profiles")
+        print("  topic_dominance_analysis.png - Topic dominance vs competition")
+        print("  topic_leadership_matrix_top3.png - Topic leadership (top 3)")
+        print("  topic_leadership_matrix_top5.png - Topic leadership (top 5)")
+        print("  summary_dashboard.png - Comprehensive dashboard")
         
         return {
             'conflict_engagement': conflict_engagement,
@@ -613,7 +613,7 @@ def main() -> Optional[Dict[str, Any]]:
     results = visualizer.run_all_visualizations()
     
     if results:
-        print("\n🎯 KEY INSIGHTS FROM SPECIALIZED VISUALIZATIONS:")
+        print("\nKEY INSIGHTS FROM SPECIALIZED VISUALIZATIONS:")
         print("-" * 50)
         
         # Top conflict-engaged community

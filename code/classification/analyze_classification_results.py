@@ -69,7 +69,7 @@ class ClassificationAnalyzer:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True, parents=True)
         
-        print(f"📁 Analytics output directory: {self.output_dir.absolute()}")
+        print(f"Analytics output directory: {self.output_dir.absolute()}")
     
     def load_latest_results(self) -> Tuple[pd.DataFrame, Optional[Dict[str, Any]]]:
         """
@@ -81,7 +81,7 @@ class ClassificationAnalyzer:
         Raises:
             FileNotFoundError: If no classification results are found
         """
-        print("🔍 Loading latest classification results...")
+        print("Loading latest classification results...")
         
         # Find the most recent results file
         csv_files = list(self.results_dir.glob("classified_notes_*.csv"))
@@ -94,15 +94,15 @@ class ClassificationAnalyzer:
         latest_csv = max(csv_files, key=lambda x: x.stat().st_mtime)
         latest_json = max(json_files, key=lambda x: x.stat().st_mtime) if json_files else None
         
-        print(f"📂 Loading classified notes: {latest_csv.name}")
+        print(f"Loading classified notes: {latest_csv.name}")
         self.classified_notes = pd.read_csv(latest_csv)
         
         if latest_json:
-            print(f"📂 Loading summary data: {latest_json.name}")
+            print(f"Loading summary data: {latest_json.name}")
             with open(latest_json, 'r') as f:
                 self.summary_data = json.load(f)
         
-        print(f"✅ Loaded {len(self.classified_notes):,} classified notes")
+        print(f"Loaded {len(self.classified_notes):,} classified notes")
         return self.classified_notes, self.summary_data
     
     def create_topic_distribution_chart(self) -> pd.Series:
@@ -112,7 +112,7 @@ class ClassificationAnalyzer:
         Returns:
             Series containing topic distribution counts
         """
-        print("📊 Creating topic distribution chart...")
+        print("Creating topic distribution chart...")
         
         # Calculate topic distribution
         topic_dist = self.classified_notes['topicName'].value_counts()
@@ -139,7 +139,7 @@ class ClassificationAnalyzer:
         # Save the horizontal bar chart
         output_file = self.output_dir / "topic_distribution_bar.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -175,7 +175,7 @@ class ClassificationAnalyzer:
         # Save the pie chart
         output_file = self.output_dir / "topic_distribution_pie.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -194,7 +194,7 @@ class ClassificationAnalyzer:
         Returns:
             Tuple of (low_confidence_by_topic, topic_analysis_dataframe)
         """
-        print("📈 Creating confidence analysis...")
+        print("Creating confidence analysis...")
         
         # 1. Overall confidence distribution
         plt.figure(figsize=(12, 8))
@@ -213,7 +213,7 @@ class ClassificationAnalyzer:
         # Save confidence distribution
         output_file = self.output_dir / "confidence_distribution.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -234,7 +234,7 @@ class ClassificationAnalyzer:
         # Save confidence by topic
         output_file = self.output_dir / "confidence_by_topic.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -260,7 +260,7 @@ class ClassificationAnalyzer:
         # Save low confidence analysis
         output_file = self.output_dir / "low_confidence_by_topic.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -303,7 +303,7 @@ class ClassificationAnalyzer:
         # Save correlation analysis
         output_file = self.output_dir / "topic_size_vs_confidence.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -319,7 +319,7 @@ class ClassificationAnalyzer:
         Returns:
             Tuple of (conflict_data_series, general_data_series)
         """
-        print("🌍 Creating geopolitical topics analysis...")
+        print("Creating geopolitical topics analysis...")
         
         # Define geopolitical categories
         conflict_topics = [
@@ -361,7 +361,7 @@ class ClassificationAnalyzer:
         # Save conflict topics chart
         output_file = self.output_dir / "geopolitical_topics.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -385,7 +385,7 @@ class ClassificationAnalyzer:
         # Save general topics chart
         output_file = self.output_dir / "general_topics.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -413,7 +413,7 @@ class ClassificationAnalyzer:
         # Save comparison chart
         output_file = self.output_dir / "geopolitical_vs_general.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         plt.show()
         plt.close()
         
@@ -429,11 +429,11 @@ class ClassificationAnalyzer:
         Returns:
             DataFrame with monthly topic counts, or None if no timestamp data
         """
-        print("📅 Creating temporal analysis...")
+        print("Creating temporal analysis...")
         
         # Check if we have timestamp data
         if 'createdAtMillis' not in self.classified_notes.columns:
-            print("⚠️  No timestamp data available for temporal analysis")
+            print("WARNING: No timestamp data available for temporal analysis")
             return None
         
         # Convert timestamp to datetime
@@ -445,12 +445,12 @@ class ClassificationAnalyzer:
         cutoff_date = pd.Timestamp('2023-06-01')
         recent_notes = self.classified_notes[self.classified_notes['created_date'] >= cutoff_date].copy()
         
-        print(f"📊 Filtering to data from June 2023 onwards...")
-        print(f"   Original notes: {len(self.classified_notes):,}")
-        print(f"   Filtered notes: {len(recent_notes):,} (from {cutoff_date.strftime('%B %Y')})")
+            print(f"Filtering to data from June 2023 onwards...")
+            print(f"   Original notes: {len(self.classified_notes):,}")
+            print(f"   Filtered notes: {len(recent_notes):,} (from {cutoff_date.strftime('%B %Y')})")
         
         if len(recent_notes) == 0:
-            print("⚠️  No data available from January 2023 onwards")
+            print("WARNING: No data available from January 2023 onwards")
             return None
         
         # Group by month and topic
@@ -545,7 +545,7 @@ class ClassificationAnalyzer:
         # Save the plot
         output_file = self.output_dir / "temporal_analysis.png"
         plt.savefig(output_file, dpi=300, bbox_inches='tight')
-        print(f"💾 Saved: {output_file}")
+        print(f"Saved: {output_file}")
         
         plt.show()
         plt.close()
@@ -565,7 +565,7 @@ class ClassificationAnalyzer:
         Returns:
             Dictionary containing all summary statistics
         """
-        print("📊 Generating summary statistics...")
+        print("Generating summary statistics...")
         
         stats = {}
         
@@ -605,20 +605,20 @@ class ClassificationAnalyzer:
         print("CLASSIFICATION SUMMARY STATISTICS")
         print("="*70)
         
-        print(f"📊 Dataset Overview:")
+        print(f"Dataset Overview:")
         print(f"   Total notes classified: {stats['total_notes']:,}")
         print(f"   Unique topics: {stats['unique_topics']}")
         
-        print(f"\n🏆 Topic Distribution:")
+        print(f"\nTopic Distribution:")
         print(f"   Largest topic: {stats['largest_topic']} ({stats['largest_topic_count']:,} notes, {stats['largest_topic_percentage']:.1f}%)")
         print(f"   Smallest topic: {stats['smallest_topic']} ({stats['smallest_topic_count']:,} notes, {stats['smallest_topic_percentage']:.1f}%)")
         
-        print(f"\n📈 Confidence Analysis:")
+        print(f"\nConfidence Analysis:")
         print(f"   Mean confidence: {stats['mean_confidence']:.3f}")
         print(f"   Median confidence: {stats['median_confidence']:.3f}")
         print(f"   Low confidence notes (<0.5): {stats['low_confidence_count']:,} ({stats['low_confidence_percentage']:.1f}%)")
         
-        print(f"\n🌍 Content Analysis:")
+        print(f"\nContent Analysis:")
         print(f"   Geopolitical/Conflict topics: {stats['geopolitical_count']:,} ({stats['geopolitical_percentage']:.1f}%)")
         print(f"   General topics: {stats['total_notes'] - stats['geopolitical_count']:,} ({100 - stats['geopolitical_percentage']:.1f}%)")
         
@@ -633,7 +633,7 @@ class ClassificationAnalyzer:
         stats_file = self.output_dir / "summary_statistics.json"
         with open(stats_file, 'w') as f:
             json.dump(stats_serializable, f, indent=2)
-        print(f"\n💾 Statistics saved to: {stats_file}")
+        print(f"\nStatistics saved to: {stats_file}")
         
         return stats
     
@@ -655,13 +655,13 @@ class ClassificationAnalyzer:
         print("="*70)
         print("COMPREHENSIVE CLASSIFICATION ANALYTICS")
         print("="*70)
-        print(f"🕐 Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         # Load data
         self.load_latest_results()
         
         # Generate all analyses
-        print("\n🎯 Running comprehensive analytics...")
+        print("\nRunning comprehensive analytics...")
         
         # 1. Topic distribution
         topic_dist = self.create_topic_distribution_chart()
@@ -678,8 +678,8 @@ class ClassificationAnalyzer:
         # 5. Summary statistics
         stats = self.create_summary_statistics()
         
-        print(f"\n✅ Analytics completed!")
-        print(f"📁 All files saved in: {self.output_dir.absolute()}")
+        print(f"\nAnalytics completed!")
+        print(f"All files saved in: {self.output_dir.absolute()}")
         
         return {
             'topic_distribution': topic_dist,

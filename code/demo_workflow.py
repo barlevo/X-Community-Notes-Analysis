@@ -40,7 +40,7 @@ def demo_classification(max_notes: int | None = None) -> dict:
     print("="*70)
     
     # Initialize classifier
-    print("\n📦 Step 1: Initializing Topic Classifier")
+    print("\nStep 1: Initializing Topic Classifier")
     print("-" * 50)
     classifier = CustomTopicClassifier(
         data_path="data",
@@ -48,12 +48,12 @@ def demo_classification(max_notes: int | None = None) -> dict:
     )
     
     # Show available topics
-    print("\n📋 Step 2: Available Topic Categories")
+    print("\nStep 2: Available Topic Categories")
     print("-" * 50)
     classifier.show_seed_term_examples()
     
     # Run classification pipeline
-    print("\n🚀 Step 3: Running Classification Pipeline")
+    print("\nStep 3: Running Classification Pipeline")
     print("-" * 50)
     if max_notes:
         print(f"   Processing {max_notes:,} notes (demo mode)")
@@ -66,7 +66,7 @@ def demo_classification(max_notes: int | None = None) -> dict:
         force_refilter=False
     )
     
-    print("\n✅ Classification Complete!")
+    print("\nClassification Complete!")
     print(f"   Results saved in: {classifier.output_dir}")
     
     return results
@@ -87,7 +87,7 @@ def demo_analysis(results_dir: str | Path = "demo_results/classification") -> di
     print("="*70)
     
     # Initialize analyzer
-    print("\n📊 Step 1: Initializing Results Analyzer")
+    print("\nStep 1: Initializing Results Analyzer")
     print("-" * 50)
     analyzer = ClassificationAnalyzer(
         results_dir=results_dir,
@@ -95,11 +95,11 @@ def demo_analysis(results_dir: str | Path = "demo_results/classification") -> di
     )
     
     # Run complete analysis
-    print("\n🎯 Step 2: Running Comprehensive Analysis")
+    print("\nStep 2: Running Comprehensive Analysis")
     print("-" * 50)
     results = analyzer.run_complete_analysis()
     
-    print("\n✅ Analysis Complete!")
+    print("\nAnalysis Complete!")
     print(f"   Visualizations saved in: {analyzer.output_dir}")
     
     return results
@@ -118,7 +118,7 @@ def print_summary(classification_results: dict, analysis_results: dict) -> None:
     print("="*70)
     
     if classification_results:
-        print("\n📊 Classification Results:")
+        print("\nClassification Results:")
         print("-" * 50)
         if 'analysis_results' in classification_results:
             analysis = classification_results['analysis_results']
@@ -129,7 +129,7 @@ def print_summary(classification_results: dict, analysis_results: dict) -> None:
                 print(f"   Mean Confidence: {conf.get('mean', 0):.3f}")
     
     if analysis_results:
-        print("\n📈 Analysis Results:")
+        print("\nAnalysis Results:")
         print("-" * 50)
         if 'summary_statistics' in analysis_results:
             stats = analysis_results['summary_statistics']
@@ -137,11 +137,11 @@ def print_summary(classification_results: dict, analysis_results: dict) -> None:
             print(f"   Unique Topics: {stats.get('unique_topics', 'N/A')}")
             print(f"   Mean Confidence: {stats.get('mean_confidence', 0):.3f}")
     
-    print("\n📁 Output Files:")
+    print("\nOutput Files:")
     print("-" * 50)
     print("   Classification results: demo_results/classification/")
     print("   Analysis visualizations: demo_results/analytics/")
-    print("\n✅ Demo completed successfully!")
+    print("\nDemo completed successfully!")
 
 
 def main():
@@ -197,14 +197,14 @@ Examples:
             print_summary(classification_results, analysis_results)
         
         print("\n" + "="*70)
-        print("🎉 DEMO COMPLETE - Ready for Presentation!")
+        print("DEMO COMPLETE - Ready for Presentation!")
         print("="*70)
         
     except KeyboardInterrupt:
-        print("\n\n⚠️  Demo interrupted by user")
+        print("\n\nWARNING: Demo interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"\n\n❌ Error during demo: {e}")
+        print(f"\n\nERROR: Error during demo: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

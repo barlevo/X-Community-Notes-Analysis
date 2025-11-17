@@ -56,7 +56,7 @@ def load_and_analyze_results(
     else:
         summary_file = results_dir / summary_file
     
-    print("🔍 COMPREHENSIVE ANALYSIS OF 1.9M COMMUNITY NOTES")
+    print("COMPREHENSIVE ANALYSIS OF 1.9M COMMUNITY NOTES")
     print("="*70)
     
     # Load summary data
@@ -64,14 +64,14 @@ def load_and_analyze_results(
         summary = json.load(f)
     
     # Load classification results (sample for analysis)
-    print("📂 Loading classification results...")
+    print("Loading classification results...")
     print(f"   Results file: {results_file}")
     print(f"   Summary file: {summary_file}")
     df = pd.read_csv(results_file, nrows=100000)  # Sample for analysis
-    print(f"✅ Loaded sample of {len(df):,} notes for detailed analysis")
+    print(f"Loaded sample of {len(df):,} notes for detailed analysis")
     
     # Basic Statistics
-    print("\n📊 DATASET OVERVIEW")
+    print("\nDATASET OVERVIEW")
     print("-" * 50)
     total_notes = summary['analysis_results']['total_notes']
     print(f"Total Notes Processed: {total_notes:,}")
@@ -80,7 +80,7 @@ def load_and_analyze_results(
     print(f"Coverage Rate: {((total_notes - 276597) / total_notes):.1%}")  # 276,597 unassigned
     
     # Topic Distribution Analysis
-    print("\n🏷️ TOPIC DISTRIBUTION ANALYSIS")
+    print("\nTOPIC DISTRIBUTION ANALYSIS")
     print("-" * 50)
     
     topic_dist = summary['analysis_results']['topic_distribution']
@@ -104,7 +104,7 @@ def load_and_analyze_results(
         print(f"  {i:2}. {topic['Topic']:<20}: {topic['Count']:>8,} ({topic['Percentage']:>5.1f}%)")
     
     # Category Analysis
-    print("\n📂 CATEGORY ANALYSIS")
+    print("\nCATEGORY ANALYSIS")
     print("-" * 50)
     
     categories = {}
@@ -121,7 +121,7 @@ def load_and_analyze_results(
         print(f"    Topics: {', '.join(data['topics'])}")
     
     # Conflict Analysis
-    print("\n⚔️ CONFLICT & GEOPOLITICAL ANALYSIS")
+    print("\nCONFLICT & GEOPOLITICAL ANALYSIS")
     print("-" * 50)
     
     conflict_topics = ['UkraineConflict', 'GazaConflict', 'SyriaWar', 'Iran', 'ChinaTaiwan', 'ChinaInfluence', 'OtherConflicts']
@@ -136,7 +136,7 @@ def load_and_analyze_results(
         print(f"  {topic:<20}: {count:>8,} ({percentage:>5.1f}%)")
     
     # Platform-Specific Analysis
-    print("\n🌐 PLATFORM CONTENT ANALYSIS")
+    print("\nPLATFORM CONTENT ANALYSIS")
     print("-" * 50)
     
     platform_topics = ['Technology', 'Scams', 'Politics']
@@ -152,7 +152,7 @@ def load_and_analyze_results(
         topic_dist['Politics'], (topic_dist['Politics']/total_notes)*100))
     
     # Quality Metrics
-    print("\n📈 CLASSIFICATION QUALITY METRICS")
+    print("\nCLASSIFICATION QUALITY METRICS")
     print("-" * 50)
     
     conf_stats = summary['analysis_results']['confidence_stats']
@@ -162,7 +162,7 @@ def load_and_analyze_results(
     print(f"Low Confidence (<0.5): {(1254875 / total_notes):.1%}")
     
     # Performance Comparison
-    print("\n⚡ PERFORMANCE COMPARISON")
+    print("\nPERFORMANCE COMPARISON")
     print("-" * 50)
     print("Our 16-Topic System vs Alternatives:")
     print(f"  Coverage Rate: 85.6% (vs ~40-60% typical)")
@@ -171,7 +171,7 @@ def load_and_analyze_results(
     print(f"  Memory Usage: ~337MB (vs 5GB+ for neural models)")
     
     # Seasonal/Temporal Insights
-    print("\n📅 CONTENT INSIGHTS")
+    print("\nCONTENT INSIGHTS")
     print("-" * 50)
     print("Key Findings:")
     print(f"  • Technology dominates: {(topic_dist['Technology']/total_notes)*100:.1f}% of all notes")
@@ -223,7 +223,7 @@ def create_visualizations(
     Returns:
         Matplotlib Figure object
     """
-    print("\n📊 CREATING VISUALIZATIONS")
+    print("\nCREATING VISUALIZATIONS")
     print("-" * 50)
     
     # Set up the plotting style
@@ -307,7 +307,7 @@ def create_visualizations(
     plt.tight_layout()
     output_path = Path(output_file)
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
-    print(f"✅ Saved visualization as '{output_path}'")
+    print(f"Saved visualization as '{output_path}'")
     
     return fig
 
@@ -325,7 +325,7 @@ def main() -> None:
     # Create visualizations
     fig = create_visualizations(topic_analysis)
     
-    print("\n🎯 CONCLUSION")
+    print("\nCONCLUSION")
     print("="*70)
     print("Our 16-topic classification system successfully processed 1.9M Community Notes with:")
     print("• 85.6% coverage rate (vs 40-60% typical)")

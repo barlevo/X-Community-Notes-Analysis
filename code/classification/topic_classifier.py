@@ -129,15 +129,15 @@ class CustomTopicClassifier:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True, parents=True)
         
-        print(f"📁 Output directory: {self.output_dir.absolute()}")
+        print(f"Output directory: {self.output_dir.absolute()}")
         
         # Print language detection status
         if LANGDETECT_AVAILABLE:
-            print("✅ Using langdetect for language detection")
+            print("Using langdetect for language detection")
         elif TEXTBLOB_AVAILABLE:
-            print("✅ Using TextBlob for language detection")
+            print("Using TextBlob for language detection")
         else:
-            print("⚠️  No language detection library available. Install with: pip install langdetect")
+            print("WARNING: No language detection library available. Install with: pip install langdetect")
         
         # Initialize topic categories
         self.setup_custom_topics()
@@ -172,8 +172,8 @@ class CustomTopicClassifier:
             15: "Immigration"
         }
         
-        print("✅ Custom topic model initialized successfully!")
-        print(f"📋 Available topics ({len(self.seed_terms)}):")
+        print("Custom topic model initialized successfully!")
+        print(f"Available topics ({len(self.seed_terms)}):")
         for topic, terms in self.seed_terms.items():
             print(f"  - {topic}: {len(terms)} seed terms")
     
@@ -369,7 +369,7 @@ class CustomTopicClassifier:
         Returns:
             Tuple of (seed_labels, conflicted_notes) arrays
         """
-        print("\n🔍 Assigning seed labels based on keyword matching...")
+        print("\nAssigning seed labels based on keyword matching...")
         
         # Initialize arrays
         seed_labels = np.zeros(len(notes_df), dtype=int)  # 0 = Unassigned
@@ -425,10 +425,10 @@ class CustomTopicClassifier:
                     total_conflicts += 1
             # else: remains 0 (Unassigned)
         
-        print(f"✅ Seed labeling completed:")
-        print(f"   📊 Total assigned: {total_assigned:,} ({(total_assigned/len(notes_df))*100:.1f}%)")
-        print(f"   ⚠️  Conflicted notes: {total_conflicts:,} ({(total_conflicts/len(notes_df))*100:.1f}%)")
-        print(f"   🚫 Unassigned: {len(notes_df) - total_assigned:,} ({((len(notes_df) - total_assigned)/len(notes_df))*100:.1f}%)")
+        print(f"Seed labeling completed:")
+        print(f"   Total assigned: {total_assigned:,} ({(total_assigned/len(notes_df))*100:.1f}%)")
+        print(f"   Conflicted notes: {total_conflicts:,} ({(total_conflicts/len(notes_df))*100:.1f}%)")
+        print(f"   Unassigned: {len(notes_df) - total_assigned:,} ({((len(notes_df) - total_assigned)/len(notes_df))*100:.1f}%)")
         
         return seed_labels, conflicted_notes
     
@@ -449,15 +449,15 @@ class CustomTopicClassifier:
         Returns:
             Tuple of (trained_pipeline, training_metadata)
         """
-        print("\n🎓 Training topic classifier...")
+        print("\nTraining topic classifier...")
         
         # Filter to only labeled data for training
         labeled_mask = seed_labels > 0
         training_texts = notes_df[labeled_mask]['summary'].values
         training_labels = seed_labels[labeled_mask]
         
-        print(f"📊 Training data: {len(training_texts):,} labeled notes")
-        print(f"📈 Label distribution:")
+        print(f"Training data: {len(training_texts):,} labeled notes")
+        print(f"Label distribution:")
         unique, counts = np.unique(training_labels, return_counts=True)
         for label, count in zip(unique, counts):
             topic_name = self.topic_labels[label]
@@ -499,11 +499,11 @@ class CustomTopicClassifier:
         y_pred = pipeline.predict(X_test)
         accuracy = np.mean(y_pred == y_test)
         
-        print(f"✅ Model trained in {training_time:.1f} seconds")
-        print(f"📊 Test accuracy: {accuracy:.3f}")
+        print(f"Model trained in {training_time:.1f} seconds")
+        print(f"Test accuracy: {accuracy:.3f}")
         
         # Show classification report
-        print(f"\n📋 Classification Report:")
+        print(f"\nClassification Report:")
         target_names = [self.topic_labels[i] for i in sorted(unique)]
         print(classification_report(y_test, y_pred, target_names=target_names, zero_division=0))
         
@@ -531,7 +531,7 @@ class CustomTopicClassifier:
         Returns:
             Tuple of (classified_notes_df, classification_metadata)
         """
-        print(f"\n🔍 Classifying all {len(notes_df):,} notes...")
+        print(f"\nClassifying all {len(notes_df):,} notes...")
         
         # Get predictions for all notes
         all_texts = notes_df['summary'].fillna('').values
@@ -549,7 +549,7 @@ class CustomTopicClassifier:
         # Add confidence scores (max probability)
         results_df['confidence'] = np.max(prediction_probs, axis=1)
         
-        print(f"✅ Classification completed in {classification_time:.1f} seconds")
+        print(f"Classification completed in {classification_time:.1f} seconds")
         
         return results_df, {
             'classification_time': classification_time,
@@ -575,14 +575,14 @@ class CustomTopicClassifier:
         topic_dist = classified_notes['topicName'].value_counts()
         total_notes = len(classified_notes)
         
-        print(f"\n📊 Topic Distribution ({total_notes:,} total notes):")
+        print(f"\nTopic Distribution ({total_notes:,} total notes):")
         print("-" * 50)
         for topic, count in topic_dist.items():
             percentage = (count / total_notes) * 100
             print(f"  {topic:<20}: {count:>8,} ({percentage:>5.1f}%)")
         
         # Sample notes for each topic
-        print(f"\n📝 Sample Notes by Topic:")
+        print(f"\nSample Notes by Topic:")
         print("-" * 50)
         for topic in topic_dist.index[:15]:  # Show all 15 topics
             topic_notes = classified_notes[classified_notes['topicName'] == topic]
@@ -594,7 +594,7 @@ class CustomTopicClassifier:
         
         # Confidence analysis
         confidence_stats = classified_notes['confidence'].describe()
-        print(f"\n📈 Confidence Statistics:")
+        print(f"\nConfidence Statistics:")
         print(f"   Mean confidence: {confidence_stats['mean']:.3f}")
         print(f"   Median confidence: {confidence_stats['50%']:.3f}")
         print(f"   Low confidence (<0.5): {len(classified_notes[classified_notes['confidence'] < 0.5]):,}")
@@ -633,18 +633,18 @@ class CustomTopicClassifier:
         
         # 1. Save classified notes
         notes_file = self.output_dir / f"classified_notes_{timestamp}.csv"
-        print(f"💾 Saving classified notes to: {notes_file}")
+        print(f"Saving classified notes to: {notes_file}")
         classified_notes.to_csv(notes_file, index=False)
         
         # 2. Save trained model
         model_file = self.output_dir / f"trained_topic_model_{timestamp}.pkl"
-        print(f"💾 Saving trained model to: {model_file}")
+        print(f"Saving trained model to: {model_file}")
         with open(model_file, 'wb') as f:
             pickle.dump(trained_pipeline, f)
         
         # 3. Save seed terms
         seed_file = self.output_dir / f"seed_terms_{timestamp}.json"
-        print(f"💾 Saving seed terms to: {seed_file}")
+        print(f"Saving seed terms to: {seed_file}")
         # Convert sets to lists for JSON serialization
         seed_terms_serializable = {k: list(v) for k, v in self.seed_terms.items()}
         with open(seed_file, 'w') as f:
@@ -664,12 +664,12 @@ class CustomTopicClassifier:
         }
         
         summary_file = self.output_dir / f"classification_summary_{timestamp}.json"
-        print(f"💾 Saving summary to: {summary_file}")
+        print(f"Saving summary to: {summary_file}")
         with open(summary_file, 'w') as f:
             json.dump(summary_data, f, indent=2, default=str)
         
-        print(f"\n✅ All outputs saved successfully!")
-        print(f"📁 Output directory: {self.output_dir.absolute()}")
+        print(f"\nAll outputs saved successfully!")
+        print(f"Output directory: {self.output_dir.absolute()}")
         
         return summary_data
     
@@ -700,29 +700,29 @@ class CustomTopicClassifier:
         english_filtered_file = self.data_path / "notes" / "notes_english_only.tsv"
         
         if english_only and english_filtered_file.exists() and not force_refilter:
-            print(f"📂 Found existing English-filtered dataset: {english_filtered_file}")
-            print("🔄 Loading pre-filtered English notes...")
+            print(f"Found existing English-filtered dataset: {english_filtered_file}")
+            print("Loading pre-filtered English notes...")
             notes_df = pd.read_csv(english_filtered_file, sep='\t', low_memory=False)
-            print(f"✅ Loaded {len(notes_df):,} English notes from cache")
-            print(f"📊 Dataset shape: {notes_df.shape}")
-            print(f"💾 Memory usage: {notes_df.memory_usage().sum() / 1024**2:.1f} MB")
-            print(f"✅ Final dataset: {len(notes_df):,} notes ready for classification")
+            print(f"Loaded {len(notes_df):,} English notes from cache")
+            print(f"Dataset shape: {notes_df.shape}")
+            print(f"Memory usage: {notes_df.memory_usage().sum() / 1024**2:.1f} MB")
+            print(f"Final dataset: {len(notes_df):,} notes ready for classification")
             return notes_df
         
         # Load original notes data
         notes_file = self.data_path / "notes" / "notes-00000.tsv"
-        print(f"📂 Loading notes from: {notes_file}")
+        print(f"Loading notes from: {notes_file}")
         
         if not notes_file.exists():
             raise FileNotFoundError(f"Notes file not found: {notes_file}")
         
         # Load with progress tracking
-        print("🔄 Reading notes TSV file...")
+        print("Reading notes TSV file...")
         notes_df = pd.read_csv(notes_file, sep='\t', low_memory=False)
         
-        print(f"✅ Loaded {len(notes_df):,} notes")
-        print(f"📊 Dataset shape: {notes_df.shape}")
-        print(f"💾 Memory usage: {notes_df.memory_usage().sum() / 1024**2:.1f} MB")
+        print(f"Loaded {len(notes_df):,} notes")
+        print(f"Dataset shape: {notes_df.shape}")
+        print(f"Memory usage: {notes_df.memory_usage().sum() / 1024**2:.1f} MB")
         
         # Check required columns
         required_cols = ['noteId', 'summary']
@@ -737,18 +737,18 @@ class CustomTopicClassifier:
         after_text_filter = len(notes_df)
         
         if after_text_filter < initial_count:
-            print(f"⚠️  Filtered out {initial_count - after_text_filter:,} notes without text")
+            print(f"WARNING: Filtered out {initial_count - after_text_filter:,} notes without text")
         
         # Filter for English only if requested
         if english_only:
-            print(f"\n🌍 Filtering for English-only notes...")
-            print(f"📊 Processing {len(notes_df):,} notes for language detection...")
+            print(f"\nFiltering for English-only notes...")
+            print(f"Processing {len(notes_df):,} notes for language detection...")
             
             # Sample a subset first to estimate filtering impact
             sample_size = min(5000, len(notes_df))
             sample_df = notes_df.sample(n=sample_size, random_state=42)
             
-            print(f"🔍 Testing language detection on {sample_size:,} sample notes...")
+            print(f"Testing language detection on {sample_size:,} sample notes...")
             english_sample = []
             for idx, text in enumerate(sample_df['summary'].values):
                 if idx % 1000 == 0 and idx > 0:
@@ -756,12 +756,12 @@ class CustomTopicClassifier:
                 english_sample.append(detect_language(text))
             
             english_rate = np.mean(english_sample)
-            print(f"📈 Sample English rate: {english_rate:.1%}")
+            print(f"Sample English rate: {english_rate:.1%}")
             estimated_english_count = int(len(notes_df) * english_rate)
-            print(f"📊 Estimated English notes: {estimated_english_count:,}")
+            print(f"Estimated English notes: {estimated_english_count:,}")
             
             # Apply to full dataset
-            print(f"🔄 Applying English filter to full dataset...")
+            print(f"Applying English filter to full dataset...")
             english_mask = []
             total_notes = len(notes_df)
             
@@ -775,16 +775,16 @@ class CustomTopicClassifier:
             notes_df = notes_df[english_mask].reset_index(drop=True)
             after_lang_filter = len(notes_df)
             
-            print(f"✅ Language filtering completed:")
-            print(f"   📊 English notes: {after_lang_filter:,} ({after_lang_filter/before_lang_filter:.1%})")
-            print(f"   🚫 Non-English filtered: {before_lang_filter - after_lang_filter:,}")
+            print(f"Language filtering completed:")
+            print(f"   English notes: {after_lang_filter:,} ({after_lang_filter/before_lang_filter:.1%})")
+            print(f"   Non-English filtered: {before_lang_filter - after_lang_filter:,}")
             
             # Save the English-filtered dataset for future use
-            print(f"💾 Saving English-filtered dataset to: {english_filtered_file}")
+            print(f"Saving English-filtered dataset to: {english_filtered_file}")
             notes_df.to_csv(english_filtered_file, sep='\t', index=False)
-            print(f"✅ English-filtered dataset saved for future use!")
+            print(f"English-filtered dataset saved for future use!")
         
-        print(f"✅ Final dataset: {len(notes_df):,} notes ready for classification")
+        print(f"Final dataset: {len(notes_df):,} notes ready for classification")
         
         return notes_df
     
@@ -819,11 +819,11 @@ class CustomTopicClassifier:
         print("="*70)
         print("CUSTOM GEOPOLITICAL TOPIC CLASSIFICATION PIPELINE")
         print("="*70)
-        print(f"🕐 Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         if english_only:
-            print("🌍 English-only filtering: ENABLED")
+            print("English-only filtering: ENABLED")
         else:
-            print("🌍 English-only filtering: DISABLED")
+            print("English-only filtering: DISABLED")
         
         pipeline_start = time.time()
         
@@ -833,7 +833,7 @@ class CustomTopicClassifier:
             
             # Limit dataset size if specified
             if max_notes and len(notes_df) > max_notes:
-                print(f"⚠️  Limiting to {max_notes:,} notes for processing")
+                print(f"WARNING: Limiting to {max_notes:,} notes for processing")
                 notes_df = notes_df.sample(n=max_notes, random_state=42).reset_index(drop=True).copy()
             
             # Step 1: Assign seed labels
@@ -867,15 +867,15 @@ class CustomTopicClassifier:
             print(f"\n" + "="*70)
             print("PIPELINE COMPLETED SUCCESSFULLY!")
             print("="*70)
-            print(f"⏱️  Total processing time: {total_time:.1f} seconds")
-            print(f"📊 Notes processed: {len(classified_notes):,}")
-            print(f"🎯 Topics assigned: {analysis_results['topics_assigned']}")
-            print(f"💾 Files saved in: {self.output_dir.absolute()}")
+            print(f"Total processing time: {total_time:.1f} seconds")
+            print(f"Notes processed: {len(classified_notes):,}")
+            print(f"Topics assigned: {analysis_results['topics_assigned']}")
+            print(f"Files saved in: {self.output_dir.absolute()}")
             
             return summary_data
             
         except Exception as e:
-            print(f"\n❌ Pipeline failed: {e}")
+            print(f"\nERROR: Pipeline failed: {e}")
             raise
     
     def show_seed_term_examples(self) -> None:
@@ -887,7 +887,7 @@ class CustomTopicClassifier:
         custom_terms = self.create_custom_seed_terms()
         
         for topic, terms in custom_terms.items():
-            print(f"\n🏷️  {topic} ({len(terms)} terms):")
+            print(f"\n{topic} ({len(terms)} terms):")
             sample_terms = list(terms)[:8]  # Show first 8 terms
             print(f"   {', '.join(sample_terms)}")
             if len(terms) > 8:
@@ -909,13 +909,13 @@ class CustomTopicClassifier:
         
         # Load a sample of data
         notes_file = self.data_path / "notes" / "notes-00000.tsv"
-        print(f"📂 Loading sample from: {notes_file}")
+        print(f"Loading sample from: {notes_file}")
         
         # Read a smaller sample for preview
         notes_df = pd.read_csv(notes_file, sep='\t', nrows=max_preview, low_memory=False)
         notes_df = notes_df[notes_df['summary'].notna()].copy()
         
-        print(f"📊 Analyzing {len(notes_df):,} sample notes")
+        print(f"Analyzing {len(notes_df):,} sample notes")
         
         # Get custom seed terms
         custom_terms = self.create_custom_seed_terms()
@@ -946,14 +946,14 @@ class CustomTopicClassifier:
             }
         
         # Display results
-        print(f"\n📊 Topic Matching Results (from {len(notes_df):,} sample notes):")
+        print(f"\nTopic Matching Results (from {len(notes_df):,} sample notes):")
         print("-" * 70)
         
         # Sort by match count
         sorted_topics = sorted(topic_matches.items(), key=lambda x: x[1]['count'], reverse=True)
         
         for topic, data in sorted_topics:
-            print(f"\n🏷️  {topic}:")
+            print(f"\n{topic}:")
             print(f"   Matches: {data['count']:,} ({data['percentage']:.1f}%)")
             if data['samples']:
                 print(f"   Examples:")
@@ -963,7 +963,7 @@ class CustomTopicClassifier:
         total_matched = sum(data['count'] for data in topic_matches.values())
         unmatched = len(notes_df) - total_matched
         
-        print(f"\n📈 Summary:")
+        print(f"\nSummary:")
         print(f"   Total notes analyzed: {len(notes_df):,}")
         print(f"   Notes with topic matches: {total_matched:,}")
         print(f"   Notes unmatched: {unmatched:,} ({(unmatched/len(notes_df))*100:.1f}%)")
@@ -998,7 +998,7 @@ def main() -> None:
     print(f"   4. Classify all notes into 15 comprehensive topics")
     
     # Ask user if they want to run test
-    print(f"\n🧪 Test Options:")
+    print(f"\nTest Options:")
     print(f"   - Run test with 10K notes: classifier.run_test_pipeline()")
     print(f"   - Run full pipeline: classifier.run_complete_pipeline()")
 

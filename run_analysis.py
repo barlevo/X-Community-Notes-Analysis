@@ -48,7 +48,7 @@ def run_classification(args):
         force_refilter=args.force_refilter
     )
     
-    print("\n✅ Classification complete!")
+    print("\nClassification complete!")
     return results
 
 
@@ -65,7 +65,7 @@ def run_analysis(args):
     
     results = analyzer.run_complete_analysis()
     
-    print("\n✅ Analysis complete!")
+    print("\nAnalysis complete!")
     return results
 
 
@@ -78,7 +78,7 @@ def run_report(args):
     generator = ReportGenerator(output_dir=args.report_output)
     report_file = generator.generate_report(results_dir=args.results_dir)
     
-    print("\n✅ Report generated!")
+    print("\nReport generated!")
     return report_file
 
 
@@ -110,7 +110,7 @@ def run_all(args):
     report_file = run_report(report_args)
     
     print("\n" + "="*70)
-    print("✅ COMPLETE PIPELINE FINISHED")
+    print("COMPLETE PIPELINE FINISHED")
     print("="*70)
     print("\nAll outputs saved:")
     print(f"  • Classification: {args.output_dir}")
@@ -196,14 +196,14 @@ Examples:
             parser.print_help()
             return 1
         
-        print("\n✅ Command completed successfully!")
+        print("\nCommand completed successfully!")
         return 0
         
     except KeyboardInterrupt:
-        print("\n\n⚠️  Interrupted by user")
+        print("\n\nWARNING: Interrupted by user")
         return 1
     except Exception as e:
-        print(f"\n\n❌ Error: {e}")
+        print(f"\n\nERROR: Error: {e}")
         import traceback
         traceback.print_exc()
         return 1
