@@ -36,7 +36,7 @@ ENV/
 
 # Jupyter Notebook
 .ipynb_checkpoints
-*.ipynb
+# Allow .ipynb files (include notebooks)
 
 # Data files (large files - don't commit)
 data/
@@ -61,7 +61,8 @@ plots/
 *.png
 *.jpg
 *.jpeg
-*.pdf
+# Allow PDF files (include project report)
+# *.pdf
 
 # Logs
 *.log
@@ -80,3 +81,12 @@ Thumbs.db
 *.temp
 *.bak
 
+# Exclude documentation guides (user preference)
+GITHUB_SETUP.md
+PRESENTATION_GUIDE.md
+
+# Exclude archive and document files
+*.zip
+*.docx
+noimages_OB_YB_AB_YB.pdf
+writeup_OB_YB_AB_YB.pdf
