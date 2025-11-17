@@ -19,8 +19,10 @@ import sys
 from pathlib import Path
 
 # Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
+# Import modules
 from code.classification.topic_classifier import CustomTopicClassifier
 from code.classification.analyze_classification_results import ClassificationAnalyzer
 
@@ -42,8 +44,14 @@ def demo_classification(max_notes: int | None = None) -> dict:
     # Initialize classifier
     print("\nStep 1: Initializing Topic Classifier")
     print("-" * 50)
+    # Data is in parent directory (Project/data, not Submission/data)
+    # __file__ is at: Submission/code/demo_workflow.py
+    # So we go: parent.parent.parent = Project/, then /data
+    script_dir = Path(__file__).resolve().parent  # Submission/code/
+    project_root = script_dir.parent.parent  # Project/
+    data_path = project_root / "data"
     classifier = CustomTopicClassifier(
-        data_path="data",
+        data_path=str(data_path),
         output_dir="demo_results/classification"
     )
     
@@ -144,8 +152,14 @@ def print_summary(classification_results: dict, analysis_results: dict) -> None:
     print("\nDemo completed successfully!")
 
 
-def main():
-    """Main demo function."""
+def main(args=None):
+    """
+    Main demo function.
+    
+    Args:
+        args: Optional argparse.Namespace object with arguments.
+              If None, will parse from sys.argv.
+    """
     parser = argparse.ArgumentParser(
         description="Demo workflow for X Community Notes Analysis",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -172,7 +186,8 @@ Examples:
         help='Skip classification, only run analysis on existing results'
     )
     
-    args = parser.parse_args()
+    if args is None:
+        args = parser.parse_args()
     
     print("="*70)
     print("X COMMUNITY NOTES ANALYSIS - DEMO WORKFLOW")
@@ -193,7 +208,20 @@ Examples:
         else:
             # Run full workflow
             classification_results = demo_classification(max_notes=max_notes)
-            analysis_results = demo_analysis(results_dir=classification_results.get('file_paths', {}).get('classified_notes', 'demo_results/classification'))
+            # Extract directory from file path if needed
+            classified_notes_path = classification_results.get('file_paths', {}).get('classified_notes', 'demo_results/classification')
+            if isinstance(classified_notes_path, (str, Path)):
+                classified_notes_path = Path(classified_notes_path)
+                # If it's a file (has .csv extension), get its parent directory
+                if classified_notes_path.suffix == '.csv':
+                    results_dir = str(classified_notes_path.parent)
+                elif classified_notes_path.is_file():
+                    results_dir = str(classified_notes_path.parent)
+                else:
+                    results_dir = str(classified_notes_path)
+            else:
+                results_dir = 'demo_results/classification'
+            analysis_results = demo_analysis(results_dir=results_dir)
             print_summary(classification_results, analysis_results)
         
         print("\n" + "="*70)

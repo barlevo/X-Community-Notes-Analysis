@@ -163,6 +163,7 @@ Examples:
     demo_parser = subparsers.add_parser('demo', help='Run demo workflow')
     demo_parser.add_argument('--quick', action='store_true', help='Quick demo (10K notes)')
     demo_parser.add_argument('--full', action='store_true', help='Full demo (all notes)')
+    demo_parser.add_argument('--analysis-only', action='store_true', help='Skip classification, only run analysis on existing results')
     
     # All command (combines classify, analyze, report)
     all_parser = subparsers.add_parser('all', help='Run complete pipeline')
@@ -189,7 +190,8 @@ Examples:
             run_report(args)
         elif args.command == 'demo':
             from code.demo_workflow import main as demo_main
-            demo_main()
+            # Pass the args from the demo subparser to demo_main
+            demo_main(args)
         elif args.command == 'all':
             run_all(args)
         else:

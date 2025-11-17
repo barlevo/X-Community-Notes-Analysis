@@ -445,9 +445,9 @@ class ClassificationAnalyzer:
         cutoff_date = pd.Timestamp('2023-06-01')
         recent_notes = self.classified_notes[self.classified_notes['created_date'] >= cutoff_date].copy()
         
-            print(f"Filtering to data from June 2023 onwards...")
-            print(f"   Original notes: {len(self.classified_notes):,}")
-            print(f"   Filtered notes: {len(recent_notes):,} (from {cutoff_date.strftime('%B %Y')})")
+        print(f"Filtering to data from June 2023 onwards...")
+        print(f"   Original notes: {len(self.classified_notes):,}")
+        print(f"   Filtered notes: {len(recent_notes):,} (from {cutoff_date.strftime('%B %Y')})")
         
         if len(recent_notes) == 0:
             print("WARNING: No data available from January 2023 onwards")
